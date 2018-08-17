@@ -1,0 +1,29 @@
+{
+  "name": "php-fn/cli",
+  "license": "MIT",
+  "homepage": "https://github.com/php-fn/php-fn-cli",
+  "authors": [{"name": "Demjan Kaluzki"}],
+  "prefer-stable": true,
+  "require": {
+    "php": ">=7.0",
+    "php-fn/php-fn": "^1.0",
+    "php-fn/di": "^1.0"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-master",
+    "php-fn/test": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "fn\\": ["src/fn"]
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "fn\\": ["tests/fn"]
+    }
+  },
+  "extra": {
+    "di": "config/di-cli.php"
+  }
+}
