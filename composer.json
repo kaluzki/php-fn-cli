@@ -5,13 +5,15 @@
   "authors": [{"name": "Demjan Kaluzki"}],
   "prefer-stable": true,
   "require": {
-    "php": ">=7.0",
-    "php-fn/php-fn": "^1.0",
-    "php-fn/di": "^1.0"
+    "php-fn/di": "^1",
+    "mnapoli/silly": "^1",
+
+    "php": ">=7.0"
   },
   "require-dev": {
-    "roave/security-advisories": "dev-master",
-    "php-fn/test": "^1.0"
+    "php-fn/test": "^1",
+
+    "roave/security-advisories": "dev-master"
   },
   "autoload": {
     "psr-4": {
@@ -24,6 +26,6 @@
     }
   },
   "extra": {
-    "di": "config/di-cli.php"
+    "di-config": {"wiring": "reflection"}
   }
 }
