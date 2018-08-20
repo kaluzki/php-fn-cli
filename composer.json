@@ -6,7 +6,9 @@
   "prefer-stable": true,
   "require": {
     "php-fn/di": "^1",
+    "symfony/console": "^3",
     "mnapoli/silly": "^1",
+    "php-di/invoker": "^2",
 
     "php": ">=7.0"
   },

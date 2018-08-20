@@ -4,7 +4,6 @@
 # http://php-pds.com/
 
 ## dirs
-!/config/
 !/src/
 !/tests/
 
