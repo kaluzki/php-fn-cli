@@ -8,6 +8,8 @@
 
 namespace fn\Cli;
 
+use fn;
+
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -41,7 +43,37 @@ class IO extends SymfonyStyle
     }
 
     /**
-     * @see InputInterface::getArgument()
+     * @see InputInterface::getArguments
+     *
+     * @param bool $provided
+     *
+     * @return array
+     */
+    public function getArguments(bool $provided = false): array
+    {
+        $arguments = $this->getInput()->getArguments();
+        return $provided ? fn\traverse($arguments, function($value, $key) {
+            return $this->hasArgument($key) ? $value : null;
+        }) : $arguments;
+    }
+
+    /**
+     * @see InputInterface::getOptions
+     *
+     * @param bool $provided
+     *
+     * @return array
+     */
+    public function getOptions(bool $provided = false): array
+    {
+        $options = $this->getInput()->getOptions();
+        return $provided ? fn\traverse($options, function($value, $key) {
+            return $this->hasOption($key) ? $value : null;
+        }) : $options;
+    }
+
+    /**
+     * @see InputInterface::getArgument
      *
      * @param string $name
      *
@@ -65,7 +97,19 @@ class IO extends SymfonyStyle
     }
 
     /**
-     * @see InputInterface::hasOption()
+     * @see InputInterface::hasArgument
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function hasArgument(string $name): bool
+    {
+        return $this->getInput()->hasArgument($name);
+    }
+
+    /**
+     * @see InputInterface::hasOption
      *
      * @param string $name
      *
