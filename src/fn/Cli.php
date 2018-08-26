@@ -102,16 +102,31 @@ class Cli extends Application
         $command = new Command($name);
         $command->setDefinition($this->input($callable, $args, $desc)->traverse);
         $command->setCode(function() use($callable) {
-            return $this->invoker->call(
-                $callable,
-                merge(
-                    $this->io->getOptions(true),
-                    $this->io->getArguments(true)
-                )
-            );
+            return $this->invoker->call($callable, $this->provided($callable));
         });
         $this->add($command);
         return $command;
+    }
+
+    /**
+     * @param callable $callable
+     *
+     * @return array
+     */
+    private function provided($callable): array
+    {
+        $params = $this->params($callable);
+        return merge(
+            $this->io->getOptions(true),
+            $this->io->getArguments(true),
+            function($value, &$key) use($params) {
+                if (isset($params[$key])) {
+                    $key = $params[$key]->getName();
+                    return $value;
+                }
+                return null;
+            }
+        );
     }
 
     /**
@@ -135,8 +150,13 @@ class Cli extends Application
      */
     private function params($callable): Map
     {
-        return map($this->invoker->reflect($callable)->getParameters(), function(ReflectionParameter $ref) {
-            return $ref->getClass() ? null : new Parameter($ref);
+        return map($this->invoker->reflect($callable)->getParameters(), function(ReflectionParameter $ref, &$key) {
+            if ($ref->getClass()) {
+                return null;
+            }
+            $param = new Parameter($ref);
+            $key = $param->getName('-');
+            return $param;
         });
     }
 }

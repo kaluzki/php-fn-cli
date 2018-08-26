@@ -8,6 +8,7 @@
 
 namespace fn\Cli;
 
+use fn;
 use ReflectionParameter;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -30,11 +31,36 @@ class Parameter
     }
 
     /**
+     * @param string $delimiter
+     *
      * @return string
      */
-    public function getName(): string
+    public function getName(string $delimiter = null): string
     {
-        return $this->ref->getName();
+        $isLow = function(string $char = null): bool {
+            return $char !== null && (!ctype_upper($char) && $char !== '_');
+        };
+
+        $isUp = function(string $char = null): bool {
+            return ctype_upper($char) || $char === '_';
+        };
+
+        $name = $this->ref->getName();
+        if ($delimiter) {
+            $tokens = [];
+            $t = 0;
+            foreach ($chars = str_split($name) as $i => $char) {
+                $last = $chars[$i-1] ?? null;
+                $next = $chars[$i+1] ?? null;
+                $t += (int)(($isUp($char) && ($isLow($next) || $isLow($last))) || (is_numeric($next) && !is_numeric($char)));
+                $tokens[$t] .= $char;
+            }
+
+            $name = fn\map($tokens, function($token) {
+                return str_replace('_', '', strtolower($token)) ?: null;
+            })->string($delimiter);
+        }
+        return $name;
     }
 
     /**
@@ -64,7 +90,7 @@ class Parameter
             }
         }
 
-        return new InputArgument($this->getName(), $mode, $desc);
+        return new InputArgument($this->getName('-'), $mode, $desc);
     }
 
     /**
@@ -85,6 +111,6 @@ class Parameter
             }
         }
 
-        return new InputOption($this->getName(), null, $mode, $desc);
+        return new InputOption($this->getName('-'), null, $mode, $desc);
     }
 }
