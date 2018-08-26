@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "24c0bd2f16569af2211c4a680bec0103",
+    "content-hash": "904d005d5957b7cfa3c99b0c3e1f120a",
     "packages": [
         {
             "name": "jeremeamia/SuperClosure",
@@ -63,51 +63,6 @@
                 "tokenizer"
             ],
             "time": "2018-03-21T22:21:57+00:00"
-        },
-        {
-            "name": "mnapoli/silly",
-            "version": "1.7.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mnapoli/silly.git",
-                "reference": "bd6d1ec6d1644a5dfd5325492f2f8d36037da32c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/silly/zipball/bd6d1ec6d1644a5dfd5325492f2f8d36037da32c",
-                "reference": "bd6d1ec6d1644a5dfd5325492f2f8d36037da32c",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.0",
-                "php-di/invoker": "~2.0",
-                "psr/container": "^1.0",
-                "symfony/console": "~3.0|~4.0"
-            },
-            "require-dev": {
-                "mnapoli/phpunit-easymock": "~1.0",
-                "phpunit/phpunit": "~6.4"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Silly\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Silly CLI micro-framework based on Symfony Console",
-            "keywords": [
-                "PSR-11",
-                "cli",
-                "console",
-                "framework",
-                "micro-framework",
-                "silly"
-            ],
-            "time": "2017-11-18T14:01:30+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -205,16 +160,16 @@
         },
         {
             "name": "php-di/php-di",
-            "version": "6.0.2",
+            "version": "6.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-DI/PHP-DI.git",
-                "reference": "71a7f2ed1e728138060ea159cbb1a92dc8620bd2"
+                "reference": "61ef5c9fcbf04c8504a46d20bd27ea608eab7864"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-DI/PHP-DI/zipball/71a7f2ed1e728138060ea159cbb1a92dc8620bd2",
-                "reference": "71a7f2ed1e728138060ea159cbb1a92dc8620bd2",
+                "url": "https://api.github.com/repos/PHP-DI/PHP-DI/zipball/61ef5c9fcbf04c8504a46d20bd27ea608eab7864",
+                "reference": "61ef5c9fcbf04c8504a46d20bd27ea608eab7864",
                 "shasum": ""
             },
             "require": {
@@ -264,7 +219,7 @@
                 "ioc",
                 "psr11"
             ],
-            "time": "2018-04-23T06:54:40+00:00"
+            "time": "2018-08-25T22:21:38+00:00"
         },
         {
             "name": "php-di/phpdoc-reader",
@@ -305,26 +260,27 @@
         },
         {
             "name": "php-fn/di",
-            "version": "v1.0.180818",
+            "version": "v1.0.180823",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fn/php-fn-di.git",
-                "reference": "04753493d74178d972c79c5bb49fda669ebd7c35"
+                "reference": "7dc5fe81b36fe061b15e18942e7bb717ec539dba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fn/php-fn-di/zipball/04753493d74178d972c79c5bb49fda669ebd7c35",
-                "reference": "04753493d74178d972c79c5bb49fda669ebd7c35",
+                "url": "https://api.github.com/repos/php-fn/php-fn-di/zipball/7dc5fe81b36fe061b15e18942e7bb717ec539dba",
+                "reference": "7dc5fe81b36fe061b15e18942e7bb717ec539dba",
                 "shasum": ""
             },
             "require": {
-                "composer-plugin-api": "^1.0",
+                "composer-plugin-api": "^1",
                 "php": ">=7.0",
-                "php-di/php-di": "^6.0"
+                "php-di/php-di": "^6",
+                "php-fn/php-fn": "^1"
             },
             "require-dev": {
-                "composer/composer": "^1.0",
-                "php-fn/test": "^1.0",
+                "composer/composer": "^1",
+                "php-fn/test": "^1",
                 "roave/security-advisories": "dev-master"
             },
             "type": "composer-plugin",
@@ -336,7 +292,10 @@
                     "fn\\": [
                         "src/fn"
                     ]
-                }
+                },
+                "files": [
+                    "src/autoload-files.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -349,7 +308,50 @@
             ],
             "description": "composer plugin for dependency injection containers",
             "homepage": "https://github.com/php-fn/php-fn-di",
-            "time": "2018-08-18T19:27:45+00:00"
+            "time": "2018-08-24T09:20:46+00:00"
+        },
+        {
+            "name": "php-fn/php-fn",
+            "version": "v1.1.180823",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fn/php-fn.git",
+                "reference": "fadf3fdcb55f6debc25de59140dfc897098d71ad"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fn/php-fn/zipball/fadf3fdcb55f6debc25de59140dfc897098d71ad",
+                "reference": "fadf3fdcb55f6debc25de59140dfc897098d71ad",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "php-fn/test": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "fn\\": [
+                        "src/fn"
+                    ]
+                },
+                "files": [
+                    "src/autoload-files.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "a php library",
+            "homepage": "https://github.com/php-fn/php-fn",
+            "keywords": [
+                "library",
+                "php"
+            ],
+            "time": "2018-08-23T22:02:15+00:00"
         },
         {
             "name": "psr/container",
