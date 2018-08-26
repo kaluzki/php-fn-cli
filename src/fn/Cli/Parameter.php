@@ -55,10 +55,15 @@ class Parameter
      */
     private function arg(string $desc = null): InputArgument
     {
-        $mode = $this->ref->isOptional() ? InputArgument::OPTIONAL : InputArgument::REQUIRED;
-        if ($this->ref->isArray()) {
-            $mode |= InputArgument::IS_ARRAY;
+        if ($this->ref->isVariadic()) {
+            $mode = InputArgument::OPTIONAL | InputArgument::IS_ARRAY;
+        } else {
+            $mode = $this->ref->isOptional() ? InputArgument::OPTIONAL : InputArgument::REQUIRED;
+            if ($this->ref->isArray()) {
+                $mode |= InputArgument::IS_ARRAY;
+            }
         }
+
         return new InputArgument($this->getName(), $mode, $desc);
     }
 
@@ -69,7 +74,9 @@ class Parameter
      */
     private function opt(string $desc = null): InputOption
     {
-        if (($type = $this->ref->getType()) && (string) $type === 'bool') {
+        if ($this->ref->isVariadic()) {
+            $mode = InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY;
+        } else if (($type = $this->ref->getType()) && (string) $type === 'bool') {
             $mode = InputOption::VALUE_NONE;
         } else  {
             $mode = $this->ref->isOptional() ? InputOption::VALUE_OPTIONAL : InputOption::VALUE_REQUIRED;
@@ -77,6 +84,7 @@ class Parameter
                 $mode |= InputOption::VALUE_IS_ARRAY;
             }
         }
+
         return new InputOption($this->getName(), null, $mode, $desc);
     }
 }
