@@ -14,22 +14,24 @@ namespace fn;
 use fn\Cli\Parameter;
 use fn\Cli\IO;
 use fn\DI;
-use Invoker;
 use Invoker\ParameterResolver;
 
 use Psr\Container\ContainerInterface;
 use ReflectionParameter;
-use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Output\OutputInterface;
+
+use Symfony\Component\Console\{
+    Application,
+    Command\Command,
+    Input\ArgvInput,
+    Input\InputInterface,
+    Output\ConsoleOutput,
+    Output\OutputInterface
+};
 
 /**
  * @property-read IO $io
  */
-class Cli extends Application implements Invoker\InvokerInterface
+class Cli extends Application
 {
     use DI\PropertiesReadOnlyTrait;
 
@@ -39,9 +41,9 @@ class Cli extends Application implements Invoker\InvokerInterface
     private $container;
 
     /**
-     * @var DI\ResolverChain
+     * @var DI\Invoker
      */
-    private $resolver;
+    private $invoker;
 
     /**
      * @inheritdoc
@@ -52,7 +54,7 @@ class Cli extends Application implements Invoker\InvokerInterface
             $container = new DI\Container(null , null, $container);
         }
         $this->container = $container;
-        $this->resolver  = new DI\ResolverChain(
+        $this->invoker   = new DI\Invoker(
             new ParameterResolver\AssociativeArrayResolver,
             new ParameterResolver\TypeHintResolver,
             $container,
@@ -99,9 +101,12 @@ class Cli extends Application implements Invoker\InvokerInterface
         $command = new Command($name);
         $command->setDefinition($this->input($callable, $args, $desc)->traverse);
         $command->setCode(function() use($callable) {
-            return $this->resolver->call(
+            return $this->invoker->call(
                 $callable,
-                $this->io->getOptions(true) + $this->io->getArguments(true)
+                merge(
+                    $this->io->getOptions(true),
+                    $this->io->getArguments(true)
+                )
             );
         });
         $this->add($command);
@@ -129,18 +134,8 @@ class Cli extends Application implements Invoker\InvokerInterface
      */
     private function params($callable): Map
     {
-        return map($this->resolver->reflect($callable)->getParameters(), function(ReflectionParameter $ref) {
+        return map($this->invoker->reflect($callable)->getParameters(), function(ReflectionParameter $ref) {
             return $ref->getClass() ? null : new Parameter($ref);
         });
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function call($callable, array $parameters = [])
-    {
-        $options   = $this->io->getOptions(true);
-        $arguments = $this->io->getArguments(true);
-        return $this->resolver->call($callable, merge($parameters, $options, $arguments));
     }
 }

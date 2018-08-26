@@ -260,16 +260,16 @@
         },
         {
             "name": "php-fn/di",
-            "version": "v1.0.180823",
+            "version": "v1.0.180826",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fn/php-fn-di.git",
-                "reference": "7dc5fe81b36fe061b15e18942e7bb717ec539dba"
+                "reference": "166bea6f2edddad790c41ba5d0e5bc708b59e52f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fn/php-fn-di/zipball/7dc5fe81b36fe061b15e18942e7bb717ec539dba",
-                "reference": "7dc5fe81b36fe061b15e18942e7bb717ec539dba",
+                "url": "https://api.github.com/repos/php-fn/php-fn-di/zipball/166bea6f2edddad790c41ba5d0e5bc708b59e52f",
+                "reference": "166bea6f2edddad790c41ba5d0e5bc708b59e52f",
                 "shasum": ""
             },
             "require": {
@@ -308,7 +308,7 @@
             ],
             "description": "composer plugin for dependency injection containers",
             "homepage": "https://github.com/php-fn/php-fn-di",
-            "time": "2018-08-24T09:20:46+00:00"
+            "time": "2018-08-26T12:52:08+00:00"
         },
         {
             "name": "php-fn/php-fn",
