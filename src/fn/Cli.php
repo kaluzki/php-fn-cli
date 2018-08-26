@@ -6,27 +6,71 @@
  * file that was distributed with this source code.
  */
 
+/** @noinspection PhpUnhandledExceptionInspection */
+/** @noinspection PhpDocMissingThrowsInspection */
+
 namespace fn;
 
-use DI\Container;
+use fn\Cli\Parameter;
+use fn\Cli\IO;
+use fn\DI;
+use Invoker;
+use Invoker\ParameterResolver;
+
 use Psr\Container\ContainerInterface;
+use ReflectionParameter;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
+ * @property-read IO $io
  */
-class Cli extends \Silly\Application
+class Cli extends Application implements Invoker\InvokerInterface
 {
+    use DI\PropertiesReadOnlyTrait;
+
+    /**
+     * @var DI\Container
+     */
+    private $container;
+
+    /**
+     * @var DI\ResolverChain
+     */
+    private $resolver;
+
     /**
      * @inheritdoc
      */
-    public function __construct(ContainerInterface $c)
+    public function __construct(ContainerInterface $container)
     {
-        parent::__construct(self::value($c, 'cli.name'), self::value($c, 'cli.version'));
-        $resolveBy = (array)self::value($c, 'cli.resolveBy') + ['typeHint' => true, 'parameterName' => true];
-        $this->useContainer($c, $resolveBy['typeHint'], $resolveBy['parameterName']);
+        if (!$container instanceof DI\Container) {
+            $container = new DI\Container(null , null, $container);
+        }
+        $this->container = $container;
+        $this->resolver  = new DI\ResolverChain(
+            new ParameterResolver\AssociativeArrayResolver,
+            new ParameterResolver\TypeHintResolver,
+            $container,
+            new ParameterResolver\Container\ParameterNameContainerResolver($container),
+            new ParameterResolver\DefaultValueResolver
+        );
+        parent::__construct($this->value('cli.name'), $this->value('cli.version'));
+    }
+
+    /**
+     * @param string $id
+     * @param mixed  $default
+     *
+     * @return mixed
+     */
+    private function value(string $id, $default = null)
+    {
+        return $this->container->has($id) ? $this->container->get($id) : $default;
     }
 
     /**
@@ -34,24 +78,69 @@ class Cli extends \Silly\Application
      */
     public function run(InputInterface $input = null, OutputInterface $output = null): int
     {
-        $container = $this->getContainer();
-        if ($container instanceof Container) {
-            $container->set(InputInterface::class, $input = $input ?: new ArgvInput);
-            $container->set(OutputInterface::class, $output = $output ?: new ConsoleOutput);
-        }
+        $this->container->set(InputInterface::class, $input = $input ?: new ArgvInput);
+        $this->container->set(OutputInterface::class, $output = $output ?: new ConsoleOutput);
+        $this->container->set(IO::class, $io = new IO($input, $output));
+        $this->container->set('io', $io);
 
         return parent::run($input, $output);
     }
 
     /**
-     * @param ContainerInterface $c
-     * @param string             $id
-     * @param mixed              $default
+     * @param string   $name
+     * @param callable $callable
+     * @param string[] $args
+     * @param string[] $desc
      *
-     * @return mixed
+     * @return Command
      */
-    private static function value(ContainerInterface $c, string $id, $default = null)
+    public function command(string $name, $callable, array $args = [], array $desc = []): Command
     {
-        return $c->has($id) ? $c->get($id) : $default;
+        $command = new Command($name);
+        $command->setDefinition($this->input($callable, $args, $desc)->traverse);
+        $command->setCode(function() use($callable) {
+            return $this->resolver->call(
+                $callable,
+                $this->io->getOptions(true) + $this->io->getArguments(true)
+            );
+        });
+        $this->add($command);
+        return $command;
+    }
+
+    /**
+     * @param callable $callable
+     * @param string[] $args
+     * @param string[] $desc
+     *
+     * @return Map
+     */
+    private function input($callable, array $args = [], array $desc = []): Map
+    {
+        return $this->params($callable)->then(function(Parameter $param) use($args, $desc) {
+            return $param->input(hasValue($param->getName(), $args), at($param->getName(), $desc, null));
+        });
+    }
+
+    /**
+     * @param callable $callable
+     *
+     * @return Map|Parameter[]
+     */
+    private function params($callable): Map
+    {
+        return map($this->resolver->reflect($callable)->getParameters(), function(ReflectionParameter $ref) {
+            return $ref->getClass() ? null : new Parameter($ref);
+        });
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function call($callable, array $parameters = [])
+    {
+        $options   = $this->io->getOptions(true);
+        $arguments = $this->io->getArguments(true);
+        return $this->resolver->call($callable, merge($parameters, $options, $arguments));
     }
 }
