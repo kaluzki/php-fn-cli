@@ -11,6 +11,6 @@
 !/.editorconfig
 !/.gitattributes
 !/.gitignore
-!/composer*
+!/composer.json
 !/LICENSE*
 !/README*
