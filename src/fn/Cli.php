@@ -55,7 +55,7 @@ class Cli extends Application
         }
         $this->container = $container;
         $this->invoker   = new DI\Invoker(
-            new DI\ParameterResolver\Variadic,
+            new ParameterResolver\VariadicResolver,
             new ParameterResolver\AssociativeArrayResolver,
             new ParameterResolver\TypeHintResolver,
             $container,
