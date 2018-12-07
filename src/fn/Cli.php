@@ -63,6 +63,13 @@ class Cli extends Application
             new ParameterResolver\DefaultValueResolver
         );
         parent::__construct($this->value('cli.name'), $this->value('cli.version'));
+
+        foreach ($this->value('cli.commands', []) as $name => $command) {
+            if (is_numeric($name) && is_string($command)) {
+                $name = end($name = explode('\\', $command));
+            }
+            $this->command(strtolower($name), $command);
+        }
     }
 
     /**
@@ -156,7 +163,7 @@ class Cli extends Application
     private function params($callable): Map
     {
         return map($this->invoker->reflect($callable)->getParameters(), function(ReflectionParameter $ref, &$key) {
-            if ($ref->getClass()) {
+            if ($ref->getClass() || $ref->isCallable()) {
                 return null;
             }
             $param = new Parameter($ref);
