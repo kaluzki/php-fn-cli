@@ -89,6 +89,11 @@ class Cli extends Application
         return parent::run($input, $output);
     }
 
+    public function __invoke()
+    {
+        return $this->run();
+    }
+
     /**
      * @param string   $name
      * @param callable $callable
