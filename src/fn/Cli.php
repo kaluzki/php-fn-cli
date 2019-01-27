@@ -15,8 +15,10 @@ use fn\Cli\Parameter;
 use fn\Cli\IO;
 use fn\DI;
 use Invoker\ParameterResolver;
-
+use phpDocumentor\Reflection\DocBlock\Tags\Param;
+use phpDocumentor\Reflection\DocBlockFactory;
 use Psr\Container\ContainerInterface;
+use ReflectionFunctionAbstract;
 use ReflectionParameter;
 
 use Symfony\Component\Console\{
@@ -112,7 +114,22 @@ class Cli extends Application
     public function command(string $name, $callable, array $args = [], array $desc = []): Command
     {
         $command = new Command($name);
-        $command->setDefinition($this->input($callable, $args, $desc)->traverse);
+        $refFn   = $this->invoker->reflect($callable);
+        if (class_exists(DocBlockFactory::class) && $comment = $refFn->getDocComment()) {
+            $doc = DocBlockFactory::createInstance()->create($comment);
+            $command->setDescription($doc->getSummary());
+            $desc = merge(traverse($doc->getTagsByName('param'), function(Param $tag) {
+                if ($paramDesc = (string)$tag->getDescription()) {
+                    return mapKey($tag->getVariableName())->andValue($paramDesc);
+                }
+                return null;
+            }), $desc);
+        }
+
+        $command->setDefinition(traverse($this->params($refFn), function(Parameter $param) use($args, $desc) {
+            return $param->input(hasValue($param->getName(), $args), at($param->getName(), $desc, null));
+        }));
+
         $command->setCode(function() use($callable) {
             return $this->invoker->call($callable, $this->provided($callable));
         });
@@ -127,7 +144,7 @@ class Cli extends Application
      */
     private function provided($callable): array
     {
-        $params = $this->params($callable);
+        $params = $this->params($this->invoker->reflect($callable));
         return merge(
             $this->io->getOptions(true),
             $this->io->getArguments(true),
@@ -142,27 +159,13 @@ class Cli extends Application
     }
 
     /**
-     * @param callable $callable
-     * @param string[] $args
-     * @param string[] $desc
-     *
-     * @return Map
-     */
-    private function input($callable, array $args = [], array $desc = []): Map
-    {
-        return $this->params($callable)->then(function(Parameter $param) use($args, $desc) {
-            return $param->input(hasValue($param->getName(), $args), at($param->getName(), $desc, null));
-        });
-    }
-
-    /**
-     * @param callable $callable
+     * @param ReflectionFunctionAbstract $refFn
      *
      * @return Map|Parameter[]
      */
-    private function params($callable): Map
+    private function params(ReflectionFunctionAbstract $refFn): Map
     {
-        return map($this->invoker->reflect($callable)->getParameters(), function(ReflectionParameter $ref, &$key) {
+        return map($refFn->getParameters(), function(ReflectionParameter $ref, &$key) {
             if ($ref->getClass() || $ref->isCallable()) {
                 return null;
             }

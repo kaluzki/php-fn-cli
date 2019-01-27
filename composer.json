@@ -2,18 +2,20 @@
   "name": "php-fn/cli",
   "license": "MIT",
   "homepage": "https://github.com/php-fn/php-fn-cli",
-  "authors": [{"name": "Demjan Kaluzki"}],
   "prefer-stable": true,
   "require": {
     "php-fn/di": "^1",
     "symfony/console": "^3",
-
     "php": ">=7.0"
   },
   "require-dev": {
     "php-fn/test": "^1",
     "docker-xampp/bin": "^1",
+    "phpdocumentor/reflection-docblock": "^4",
     "roave/security-advisories": "dev-master"
+  },
+  "suggest": {
+    "phpdocumentor/reflection-docblock": "to detect command and argument descriptions from doc blocks"
   },
   "autoload": {
     "psr-4": {

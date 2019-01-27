@@ -12,12 +12,24 @@
         'cli.name'     => 'tests/cli',
         'cli.version'  => '0.1',
         'cli.commands' => [
-            's0' => DI\value(function(fn\Cli\IO $io, bool $flag = true) {
-                $flag ? $io->success('true') : $io->error('false');
-            }),
             fn\S1::class
         ]
     ], ['wiring' => fn\DI\ContainerConfigurationFactory::WIRING_REFLECTION]));
+
+    $cli->command('s0',
+        /**
+         * command S0
+         *
+         * very long
+         * description
+         *
+         * @param string $NewNASAModule new nasa module
+         * @param bool $flag flag description
+         */
+        function(fn\Cli\IO $io, string $NewNASAModule,  bool $flag = true) {
+            $flag ? $io->success('true') : $io->error('false');
+        }
+    , [], ['flag' => 'overwritten flag description']);
 
     $cli();
 });
