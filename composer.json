@@ -4,9 +4,9 @@
   "homepage": "https://github.com/php-fn/php-fn-cli",
   "prefer-stable": true,
   "require": {
-    "php-fn/di": "^1",
+    "php-fn/di": "^1.1",
     "symfony/console": "^3",
-    "php": ">=7.0"
+    "php": ">=7.1"
   },
   "require-dev": {
     "php-fn/test": "^1",
@@ -20,7 +20,10 @@
   "autoload": {
     "psr-4": {
       "fn\\": ["src/fn"]
-    }
+    },
+    "files": [
+      "src/autoload-files.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {

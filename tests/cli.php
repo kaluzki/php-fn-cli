@@ -7,14 +7,19 @@
  * file that was distributed with this source code.
  */
 
-\call_user_func(require __DIR__.'/../vendor/autoload.php', function() {
-    $cli = new fn\Cli(fn\di([
+use fn\{Cli, DI};
+
+call_user_func(require __DIR__.'/../vendor/autoload.php', function() {
+    $cli = fn\cli([
         'cli.name'     => 'tests/cli',
         'cli.version'  => '0.1',
+        'cli.commands.default' => \DI\value(function($command) {
+            return $command;
+        }),
         'cli.commands' => [
             fn\S1::class
         ]
-    ], ['wiring' => fn\DI\ContainerConfigurationFactory::WIRING_REFLECTION]));
+    ], DI\WIRING\AUTO);
 
     $cli->command('s0',
         /**
@@ -23,13 +28,15 @@
          * very long
          * description
          *
-         * @param string $NewNASAModule new nasa module
-         * @param bool $flag flag description
+         * @param Cli\IO     $io
+         * @param string     $NewNASAModule new nasa module
+         * @param bool       $flag          flag description
          */
-        function(fn\Cli\IO $io, string $NewNASAModule,  bool $flag = true) {
+        function(Cli\IO $io, string $NewNASAModule,  bool $flag = true) {
             $flag ? $io->success('true') : $io->error('false');
         }
     , [], ['flag' => 'overwritten flag description']);
+
 
     $cli();
 });
