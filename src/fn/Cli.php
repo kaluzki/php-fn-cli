@@ -75,6 +75,21 @@ class Cli extends Application
     }
 
     /**
+     * @inheritdoc
+     */
+    protected function getDefaultCommands()
+    {
+        $commands = parent::getDefaultCommands();
+        if (($default = $this->value('cli.commands.default')) !== null) {
+            if (isCallable($default, true)) {
+                return traverse($commands, $default);
+            }
+            return $default ? (array) $default : [];
+        }
+        return $commands;
+    }
+
+    /**
      * @param string $id
      * @param mixed  $default
      *
