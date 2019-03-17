@@ -4,7 +4,7 @@
   "homepage": "https://github.com/php-fn/php-fn-cli",
   "prefer-stable": true,
   "require": {
-    "php-fn/di": "^1.1",
+    "php-fn/di": "^1",
     "symfony/console": "^3",
     "php": ">=7.1"
   },
@@ -29,8 +29,5 @@
     "psr-4": {
       "fn\\": ["tests/fn"]
     }
-  },
-  "extra": {
-    "di-config": {"wiring": "reflection"}
   }
 }

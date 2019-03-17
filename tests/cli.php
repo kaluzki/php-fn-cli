@@ -6,7 +6,7 @@
 
 use fn\{Cli, DI};
 
-call_user_func(require __DIR__.'/../vendor/autoload.php', function() {
+call_user_func(require __DIR__ . '/../vendor/autoload.php', function() {
     $cli = fn\cli([
         'cli.name'     => 'tests/cli',
         'cli.version'  => '0.1',
