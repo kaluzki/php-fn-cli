@@ -77,11 +77,14 @@ class Cli extends Application
     protected function getDefaultCommands()
     {
         $commands = parent::getDefaultCommands();
-        if (($default = $this->value('cli.commands.default')) !== null) {
-            if (isCallable($default, true)) {
-                return traverse($commands, $default);
-            }
-            return $default ? (array) $default : [];
+        $default  = $this->value('cli.commands.default');
+        if (isCallable($default, true)) {
+            return traverse($commands, $default);
+        }
+        if ($default === false) {
+            return traverse($commands, function(Command $command) {
+                return $command->setHidden(true);
+            });
         }
         return $commands;
     }

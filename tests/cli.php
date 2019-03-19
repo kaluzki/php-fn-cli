@@ -8,11 +8,9 @@ use fn\{Cli, DI};
 
 call_user_func(require __DIR__ . '/../vendor/autoload.php', function() {
     $cli = fn\cli([
-        'cli.name'     => 'tests/cli',
+        'cli.name' => 'tests/cli',
         'cli.version'  => '0.1',
-        'cli.commands.default' => \DI\value(function($command) {
-            return $command;
-        }),
+        'cli.commands.default' => false,
         'cli.commands' => [
             fn\S1::class
         ]
@@ -25,14 +23,16 @@ call_user_func(require __DIR__ . '/../vendor/autoload.php', function() {
          * very long
          * description
          *
-         * @param Cli\IO     $io
-         * @param string     $NewNASAModule new nasa module
-         * @param bool       $flag          flag description
+         * @param Cli\IO  $io
+         * @param string  $NewNASAModule new nasa module
+         * @param bool    $flag          flag description
+         * @param mixed   ...$args       listing
          */
-        function(Cli\IO $io, string $NewNASAModule,  bool $flag = true) {
-            $flag ? $io->success('true') : $io->error('false');
+        function(Cli\IO $io, string $NewNASAModule,  bool $flag = true, ...$args) {
+            $flag ? $io->success($NewNASAModule) : $io->error($NewNASAModule);
+            $io->listing($args);
         }
-    , [], ['flag' => 'overwritten flag description']);
+    , ['args'], ['flag' => 'overwritten flag description']);
 
 
     $cli();
