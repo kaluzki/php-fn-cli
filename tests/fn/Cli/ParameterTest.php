@@ -55,7 +55,7 @@ class ParameterTest extends \PHPUnit\Framework\TestCase
      * @param string              $expected
      * @param ReflectionParameter $ref
      */
-    public function testGetName($expected, ReflectionParameter $ref)
+    public function testGetName($expected, ReflectionParameter $ref): void
     {
         $param = new Parameter($ref);
         assert\same($ref->getName(), $param->getName());

@@ -15,7 +15,7 @@ class CliTest extends \PHPUnit\Framework\TestCase
      *
      * @todo complete
      */
-    public function testCommand()
+    public function testCommand(): void
     {
         $cli = new Cli(di());
         assert\type(Command::class, $cli->command('cmd', function() {}));

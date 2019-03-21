@@ -74,11 +74,11 @@ class Cli extends Application
     /**
      * @inheritdoc
      */
-    protected function getDefaultCommands()
+    protected function getDefaultCommands(): array
     {
         $commands = parent::getDefaultCommands();
         $default  = $this->value('cli.commands.default');
-        if (isCallable($default, true)) {
+        if (isCallable($default)) {
             return traverse($commands, $default);
         }
         if ($default === false) {
@@ -113,7 +113,7 @@ class Cli extends Application
         return parent::run($input, $output);
     }
 
-    public function __invoke()
+    public function __invoke(): int
     {
         return $this->run();
     }
