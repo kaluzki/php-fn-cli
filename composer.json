@@ -6,11 +6,12 @@
   "require": {
     "php-fn/di": "^2",
     "symfony/console": "^3",
+
+    "ext-json": "*",
     "php": ">=7.1"
   },
   "require-dev": {
     "php-fn/test": "^1",
-    "docker-xampp/bin": "^1",
     "phpdocumentor/reflection-docblock": "^4",
     "roave/security-advisories": "dev-master"
   },

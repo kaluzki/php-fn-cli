@@ -7,6 +7,7 @@ namespace fn\Cli;
 
 use fn;
 
+use Generator;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -16,6 +17,16 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 class IO extends SymfonyStyle
 {
+    /**
+     * @var int
+     */
+    public const VERBOSITY =
+        self::VERBOSITY_QUIET |
+        self::VERBOSITY_NORMAL |
+        self::VERBOSITY_VERBOSE |
+        self::VERBOSITY_VERY_VERBOSE |
+        self::VERBOSITY_DEBUG;
+
     /**
      * @var InputInterface
      */
@@ -115,5 +126,19 @@ class IO extends SymfonyStyle
     public function hasOption(string $name): bool
     {
         return $this->getInput()->hasOption($name);
+    }
+
+    /**
+     * @param iterable $result
+     *
+     * @return Generator
+     */
+    public function render(iterable $result): Generator
+    {
+        foreach ($result as $key => $line) {
+            yield $key => $line;
+            $line = $line instanceof Renderable ? $line : new Renderable($line);
+            $line->toCli($this);
+        }
     }
 }

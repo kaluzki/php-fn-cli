@@ -119,6 +119,8 @@ class Cli extends Application
     }
 
     /**
+     * The result of the callable will be printed to cli automatically, if the function has no Cli\IO parameter
+     *
      * @param string   $name
      * @param callable $callable
      * @param string[] $args
@@ -130,6 +132,13 @@ class Cli extends Application
     {
         $command = new Command($name);
         $refFn   = $this->invoker->reflect($callable);
+
+        $isOutput = some($refFn->getParameters(), function (ReflectionParameter $parameter): bool {
+            return ($class = $parameter->getClass()) && (
+                $class->isSubclassOf(OutputInterface::class) || $class->name === OutputInterface::class
+            );
+        });
+
         if (class_exists(DocBlockFactory::class) && $comment = $refFn->getDocComment()) {
             $doc = DocBlockFactory::createInstance()->create($comment);
             $command->setDescription($doc->getSummary());
@@ -141,13 +150,22 @@ class Cli extends Application
             }), $desc);
         }
 
-        $command->setDefinition(traverse($this->params($refFn), function(Parameter $param) use($args, $desc) {
-            return $param->input(hasValue($param->getName(), $args), at($param->getName(), $desc, null));
-        }));
+        $command->setDefinition(traverse(
+            static::params($refFn),
+            function(Parameter $param) use($args, $desc) {
+                return $param->input(hasValue($param->getName(), $args), at($param->getName(), $desc, null));
+            })
+        );
 
-        $command->setCode(function() use($callable) {
-            return $this->invoker->call($callable, $this->provided($callable));
+        $command->setCode(function() use($callable, $isOutput) {
+            $result = $this->invoker->call($callable, $this->provided($callable));
+            if ($isOutput || !is_iterable($result)) {
+                return $result;
+            }
+            traverse($this->io->render($result), function() {});
+            return 0;
         });
+
         $this->add($command);
         return $command;
     }
@@ -159,7 +177,7 @@ class Cli extends Application
      */
     private function provided($callable): array
     {
-        $params = $this->params($this->invoker->reflect($callable));
+        $params = static::params($this->invoker->reflect($callable));
         return merge(
             $this->io->getOptions(true),
             $this->io->getArguments(true),
@@ -178,7 +196,7 @@ class Cli extends Application
      *
      * @return Map|Parameter[]
      */
-    private function params(ReflectionFunctionAbstract $refFn): Map
+    protected static function params(ReflectionFunctionAbstract $refFn): Map
     {
         return map($refFn->getParameters(), function(ReflectionParameter $ref, &$key) {
             if ($ref->getClass() || $ref->isCallable()) {
