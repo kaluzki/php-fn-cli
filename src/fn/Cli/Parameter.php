@@ -34,11 +34,11 @@ class Parameter
      */
     public function getName(string $delimiter = null): string
     {
-        $isLow = function(string $char = null): bool {
+        $isLow = function (string $char = null): bool {
             return $char !== null && (!ctype_upper($char) && $char !== '_');
         };
 
-        $isUp = function(string $char = null): bool {
+        $isUp = function (string $char = null): bool {
             return ctype_upper($char) || $char === '_';
         };
 
@@ -47,13 +47,13 @@ class Parameter
             $tokens = [];
             $t = 0;
             foreach ($chars = str_split($name) as $i => $char) {
-                $last = $chars[$i-1] ?? null;
-                $next = $chars[$i+1] ?? null;
+                $last = $chars[$i - 1] ?? null;
+                $next = $chars[$i + 1] ?? null;
                 $t += (int)(($isUp($char) && ($isLow($next) || $isLow($last))) || (is_numeric($next) && !is_numeric($char)));
                 $tokens[$t] .= $char;
             }
 
-            $name = fn\map($tokens, function($token) {
+            $name = fn\map($tokens, function ($token) {
                 return str_replace('_', '', strtolower($token)) ?: null;
             })->string($delimiter);
         }
@@ -61,7 +61,7 @@ class Parameter
     }
 
     /**
-     * @param bool        $asArg
+     * @param bool $asArg
      * @param string|null $desc
      *
      * @return InputOption|InputArgument
@@ -99,9 +99,9 @@ class Parameter
     {
         if ($this->ref->isVariadic()) {
             $mode = InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY;
-        } else if (($type = $this->ref->getType()) && (string) $type === 'bool') {
+        } else if (($type = $this->ref->getType()) && (string)$type === 'bool') {
             $mode = InputOption::VALUE_NONE;
-        } else  {
+        } else {
             $mode = $this->ref->isOptional() ? InputOption::VALUE_OPTIONAL : InputOption::VALUE_REQUIRED;
             if ($this->ref->isArray()) {
                 $mode |= InputOption::VALUE_IS_ARRAY;
