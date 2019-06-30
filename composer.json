@@ -2,7 +2,6 @@
   "name": "php-fn/cli",
   "license": "MIT",
   "homepage": "https://github.com/php-fn/php-fn-cli",
-  "prefer-stable": true,
   "require": {
     "php-fn/di": "^2.0",
     "symfony/console": "^3.4",
@@ -26,6 +25,13 @@
   "autoload-dev": {
     "psr-4": {
       "fn\\": ["tests/fn"]
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "extra": {
+    "branch-alias": {
+      "dev-master": "2.x-dev"
     }
   }
 }
