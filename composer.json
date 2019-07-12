@@ -11,7 +11,7 @@
     "php": ">=7.1"
   },
   "require-dev": {
-    "php-fn/test": "^1",
+    "php-fn/test": "2.x-dev",
     "roave/security-advisories": "dev-master"
   },
   "autoload": {

@@ -68,13 +68,34 @@ call_user_func(require __DIR__ . '/../vendor/autoload.php', function () {
 
         yield io('io');
 
-        yield ask('question?');
-        yield ask('question?', 'answer');
-        yield ask('yes?', true);
-        yield ask('no?', false);
-        yield ask('choice?', ['opt1', 'opt2']);
-        yield ask('choice?', 'opt1', ['opt1', 'opt2']);
-        yield ask('choice?', ['opt1', 'opt2'], 'opt2');
+        /**
+         * @param string $string foo
+         */
+        yield function (
+            string $string,
+            array $array,
+            bool $yes,
+            $arr = [],
+            bool $no = false,
+            $default = 'def'
+        ) {
+            return [
+                ['name' => 'q', 'value' => $string],
+                ['array', (object)$array],
+                ['yes', $yes],
+                ['arr', (object)$arr],
+                ['no', $no],
+                ['default', $default],
+            ];
+        };
+
+//        yield ask('question?');
+//        yield ask('question?', 'answer');
+//        yield ask('yes?', true);
+//        yield ask('no?', false);
+//        yield ask('choice?', ['opt1', 'opt2']);
+//        yield ask('choice?', 'opt1', ['opt1', 'opt2']);
+//        yield ask('choice?', ['opt1', 'opt2'], 'opt2');
     });
 
 
