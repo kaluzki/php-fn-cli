@@ -6,7 +6,7 @@
 
 namespace fn;
 
-call_user_func(require __DIR__ . '/../vendor/autoload.php', function () {
+call_user_func(require __DIR__ . '/../vendor/autoload.php', static function () {
     $cli = cli([
         'cli.name' => 'tests/cli',
         'cli.version' => '0.1',
@@ -36,7 +36,7 @@ call_user_func(require __DIR__ . '/../vendor/autoload.php', function () {
         , ['args'], ['flag' => 'overwritten flag description']
     );
 
-    $cli->command('test:io', function() {
+    $cli->command('test:io', static function() {
         yield $listing = [
             'l1',
             'l2',
@@ -56,7 +56,7 @@ call_user_func(require __DIR__ . '/../vendor/autoload.php', function () {
 
         yield $json = (object)['a' => 'A'];
 
-        yield leaves(['A', ['B', 'd'], 'c'], function(Map\Path $path) {
+        yield leaves(['A', ['B', 'd'], 'c'], static function (Map\Path $path) {
             return (string)$path;
         });
 

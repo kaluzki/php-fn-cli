@@ -62,8 +62,8 @@ class Cli extends Application
             new ParameterResolver\Container\ParameterNameContainerResolver($container),
             new ParameterResolver\DefaultValueResolver
         );
-        parent::__construct($this->value('cli.name'), $this->value('cli.version'));
 
+        parent::__construct($this->value('cli.name'), $this->value('cli.version'));
         foreach ($this->value('cli.commands', []) as $name => $command) {
             if (is_numeric($name) && is_string($command)) {
                 $name = end($name = explode('\\', $command));
@@ -73,12 +73,49 @@ class Cli extends Application
     }
 
     /**
+     * @param Package|string $package
+     * @param string|array|callable ...$args
+     *
+     * @return Cli
+     */
+    public static function fromPackage($package, ...$args): self
+    {
+        /** @var Package $package */
+        $package = ($package instanceof Package ? $package : Package::get($package));
+        $fns    = [];
+        $config = [];
+        foreach ($args as $arg) {
+            if (isCallable($arg)) {
+                $fns[] = $arg;
+            } else {
+                $config[] = is_string($arg) ? $package->file($arg) : $arg;
+            }
+        }
+
+        $di = di([
+            Package::class => $package,
+            'cli.name' => $package->name,
+            'cli.version' => $package->version(),
+        ], ...$config);
+
+        $cli = new static($di);
+        foreach ($fns as $fn) {
+            $result = $di->call($fn);
+            foreach (is_iterable($result) ? $result : [] as $name => $command) {
+                $cli->command($name, ...array_values(is_array($command) ? $command : [$command]));
+            }
+        }
+
+        return $cli;
+    }
+
+    /**
      * @inheritdoc
      */
     protected function getDefaultCommands(): array
     {
         $commands = parent::getDefaultCommands();
-        $default  = $this->value('cli.commands.default');
+        $default  = $this->value('cli.commands.default', false);
         if (isCallable($default)) {
             return traverse($commands, $default);
         }

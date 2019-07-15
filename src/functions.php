@@ -9,15 +9,15 @@ namespace fn {
 
     /**
      * Create a console app from the given di definitions.
-     * If the last parameter is a callable  it will be invoked to get the container configuration.
-     * If the last parameter is TRUE the container will be auto(by reflections) wired.
      *
+     * @param $package, ...$args
      * @param string|array|DefinitionSource|callable|true ...$args
+     *
      * @return Cli
      */
-    function cli(...$args): Cli
+    function cli($package, ...$args): Cli
     {
-        return new Cli(di(...$args));
+        return Cli::fromPackage(...func_get_args());
     }
 
     /**
