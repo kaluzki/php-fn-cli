@@ -6,18 +6,19 @@
 namespace fn;
 
 use fn\test\assert;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Command\Command;
 
-class CliTest extends \PHPUnit\Framework\TestCase
+class CliTest extends TestCase
 {
     /**
-     * @covers Cli::command
+     * @covers \fn\Cli::command
      *
      * @todo complete
      */
     public function testCommand(): void
     {
         $cli = new Cli(di());
-        assert\type(Command::class, $cli->command('cmd', function() {}));
+        assert\type(Command::class, $cli->command('cmd', static function () {}));
     }
 }

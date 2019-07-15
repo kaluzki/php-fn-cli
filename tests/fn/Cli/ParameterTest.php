@@ -7,10 +7,14 @@ namespace fn\Cli;
 
 use fn\test\assert;
 use fn;
+use PHPUnit\Framework\TestCase;
 use ReflectionFunction;
 use ReflectionParameter;
 
-class ParameterTest extends \PHPUnit\Framework\TestCase
+/**
+ * @coversDefaultClass Parameter
+ */
+class ParameterTest extends TestCase
 {
     /**
      * @return array
@@ -49,8 +53,8 @@ class ParameterTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @covers \fn\Cli\Parameter::getName
      * @dataProvider providerGetName
-     * @cover Parameter::getName
      *
      * @param string              $expected
      * @param ReflectionParameter $ref
