@@ -27,6 +27,7 @@ class CliTest extends TestCase
 
     /**
      * @covers \fn\Cli::fromPackage
+     * @uses \fn\cli
      */
     public function testFromPackage(): void
     {
@@ -49,5 +50,6 @@ class CliTest extends TestCase
         assert\same('command', $cli->get('c3')->getDescription());
         assert\same(0, $cli->get('c3')->getDefinition()->getArgumentCount());
         assert\same(1, $cli->get('c4')->getDefinition()->getArgumentCount());
+        assert\same('foo', cli(['cli.name' => 'foo'])->getName());
     }
 }

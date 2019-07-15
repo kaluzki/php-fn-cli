@@ -73,15 +73,19 @@ class Cli extends Application
     }
 
     /**
-     * @param Package|string $package
-     * @param string|array|callable ...$args
+     * @param Package|string|array|callable ...$args
      *
      * @return Cli
      */
-    public static function fromPackage($package, ...$args): self
+    public static function fromPackage(...$args): self
     {
-        /** @var Package $package */
-        $package = ($package instanceof Package ? $package : Package::get($package));
+        $package = $args[0] ?? null;
+        is_string($package) && $package = Package::get($package);
+        if ($package instanceof Package) {
+            unset($args[0]);
+        } else {
+            $package = Package::get('');
+        }
         $fns    = [];
         $config = [];
         foreach ($args as $arg) {

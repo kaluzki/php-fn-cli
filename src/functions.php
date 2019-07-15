@@ -5,19 +5,16 @@
 
 namespace fn {
 
-    use DI\Definition\Source\DefinitionSource;
-
     /**
      * Create a console app from the given di definitions.
      *
-     * @param $package, ...$args
-     * @param string|array|DefinitionSource|callable|true ...$args
+     * @param Package|string|array|callable ...$args
      *
      * @return Cli
      */
-    function cli($package, ...$args): Cli
+    function cli(...$args): Cli
     {
-        return Cli::fromPackage(...func_get_args());
+        return Cli::fromPackage(...$args);
     }
 
     /**
