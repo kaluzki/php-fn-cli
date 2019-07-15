@@ -50,6 +50,7 @@ class Parameter
                 $last = $chars[$i - 1] ?? null;
                 $next = $chars[$i + 1] ?? null;
                 $t += (int)(($isUp($char) && ($isLow($next) || $isLow($last))) || (is_numeric($next) && !is_numeric($char)));
+                isset($tokens[$t]) || $tokens[$t] = '';
                 $tokens[$t] .= $char;
             }
 
