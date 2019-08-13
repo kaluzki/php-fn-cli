@@ -3,9 +3,9 @@
  * Copyright (C) php-fn. See LICENSE file for license details.
  */
 
-namespace fn\Cli;
+namespace php\Cli;
 
-use fn;
+use php;
 
 use Generator;
 use Symfony\Component\Console\Input\InputInterface;
@@ -60,7 +60,7 @@ class IO extends SymfonyStyle
     public function getArguments(bool $provided = false): array
     {
         $arguments = $this->getInput()->getArguments();
-        return $provided ? fn\traverse($arguments, function($value, $key) {
+        return $provided ? php\traverse($arguments, function($value, $key) {
             return $this->hasArgument($key) ? $value : null;
         }) : $arguments;
     }
@@ -75,7 +75,7 @@ class IO extends SymfonyStyle
     public function getOptions(bool $provided = false): array
     {
         $options = $this->getInput()->getOptions();
-        return $provided ? fn\traverse($options, function($value, $key) {
+        return $provided ? php\traverse($options, function($value, $key) {
             return $this->hasOption($key) ? $value : null;
         }) : $options;
     }

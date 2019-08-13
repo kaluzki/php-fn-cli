@@ -3,12 +3,12 @@
  * Copyright (C) php-fn. See LICENSE file for license details.
  */
 
-namespace fn;
+namespace php;
 
 /**
  * Class S1
  *
- * @package fn
+ * @package php
  */
 class S1
 {

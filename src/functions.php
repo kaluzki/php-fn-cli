@@ -3,7 +3,7 @@
  * Copyright (C) php-fn. See LICENSE file for license details.
  */
 
-namespace fn {
+namespace php {
 
     /**
      * Create a console app from the given di definitions.

@@ -4,7 +4,7 @@
  * Copyright (C) php-fn. See LICENSE file for license details.
  */
 
-namespace fn;
+namespace php;
 
 call_user_func(require __DIR__ . '/../vendor/autoload.php', static function () {
     $cli = cli([

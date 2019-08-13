@@ -6,11 +6,11 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 /** @noinspection PhpDocMissingThrowsInspection */
 
-namespace fn;
+namespace php;
 
-use fn\Cli\Parameter;
-use fn\Cli\IO;
-use fn\DI;
+use php\Cli\Parameter;
+use php\Cli\IO;
+use php\DI;
 use Invoker\ParameterResolver;
 use phpDocumentor\Reflection\DocBlock\Tags\Param;
 use phpDocumentor\Reflection\DocBlockFactory;
