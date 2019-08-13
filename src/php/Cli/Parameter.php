@@ -100,7 +100,7 @@ class Parameter
     {
         if ($this->ref->isVariadic()) {
             $mode = InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY;
-        } else if (($type = $this->ref->getType()) && (string)$type === 'bool') {
+        } else if (($type = $this->ref->getType()) && $type->getName() === 'bool') {
             $mode = InputOption::VALUE_NONE;
         } else {
             $mode = $this->ref->isOptional() ? InputOption::VALUE_OPTIONAL : InputOption::VALUE_REQUIRED;
