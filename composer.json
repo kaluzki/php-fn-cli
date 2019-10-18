@@ -1,41 +1,44 @@
 {
-  "name": "php-fn/cli",
-  "license": "MIT",
-  "homepage": "https://github.com/php-fn/php-fn-cli",
-  "require": {
-    "php-fn/di": "^3.0",
-    "symfony/console": "^3.4",
-    "phpdocumentor/reflection-docblock": "^4.3",
-
-    "ext-json": "*",
-    "php": ">=7.1"
-  },
-  "require-dev": {
-    "php-fn/test": "^3.0",
-    "php-coveralls/php-coveralls": "^2.1",
-    "roave/security-advisories": "dev-master"
-  },
-  "autoload": {
-    "psr-4": {
-      "php\\": ["src/php"]
+    "name": "php-fn/cli",
+    "license": "MIT",
+    "homepage": "https://github.com/php-fn/php-fn-cli",
+    "require": {
+        "php-fn/di": "^3.0",
+        "symfony/console": "^3.4",
+        "phpdocumentor/reflection-docblock": "^4.3",
+        "ext-json": "*",
+        "php": ">=7.1"
     },
-    "files": [
-      "src/autoload-files.php"
-    ]
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "php\\": ["tests/php"]
+    "require-dev": {
+        "php-fn/test": "^3.0",
+        "php-coveralls/php-coveralls": "^2.1",
+        "roave/security-advisories": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "php\\": [
+                "src/php"
+            ]
+        },
+        "files": [
+            "src/autoload-files.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "php\\": [
+                "tests/php"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "branch-alias": {
+            "dev-master": "3.x-dev"
+        }
+    },
+    "scripts": {
+        "test": "php -d error_reporting=22527 vendor/bin/phpunit tests/"
     }
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true,
-  "extra": {
-    "branch-alias": {
-      "dev-master": "2.x-dev"
-    }
-  },
-  "scripts": {
-    "test": "php -d error_reporting=22527 vendor/bin/phpunit tests/"
-  }
 }
