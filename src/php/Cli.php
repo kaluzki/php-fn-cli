@@ -96,7 +96,7 @@ class Cli extends Application
             }
         }
 
-        $di = di([
+        $di = DI::create([
             Package::class => $package,
             'cli.name' => $package->name,
             'cli.version' => $package->version(),

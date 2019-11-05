@@ -21,7 +21,7 @@ class CliTest extends TestCase
      */
     public function testCommand(): void
     {
-        $cli = new Cli(di());
+        $cli = new Cli(DI::create());
         assert\type(Command::class, $cli->command('cmd', static function () {}));
     }
 
@@ -31,7 +31,7 @@ class CliTest extends TestCase
      */
     public function testFromPackage(): void
     {
-        $package = package(VENDOR\PHP_FN\CLI);
+        $package = Package::get(VENDOR\PHP_FN\CLI);
         assert\type(Cli::class, $cli = Cli::fromPackage(VENDOR\PHP_FN\CLI));
         assert\same($package->name, $cli->getName());
         assert\same($package->version(), $cli->getVersion());

@@ -14,7 +14,7 @@ call_user_func(require __DIR__ . '/../vendor/autoload.php', static function () {
         'cli.commands' => [
             S1::class
         ]
-    ], DI\WIRING\AUTO);
+    ], DI\WIRING::AUTO);
 
     $cli->command('s0',
 
