@@ -27,15 +27,4 @@ namespace php {
     {
         return new Cli\Renderable($content, $type);
     }
-
-    /**
-     * @param string $question
-     * @param bool|array|null|callable ...$args
-     *
-     * @return Cli\Renderable
-     */
-    function ask($question, ...$args): Cli\Renderable
-    {
-        return Cli\Renderable::ask($question, ...$args);
-    }
 }

@@ -94,28 +94,4 @@ class Renderable
         $io->writeln($content, $type);
         return 1;
     }
-
-    /**
-     * @param string $question
-     * @param bool|array|null|callable ...$args
-     *
-     * @return static
-     */
-    public static function ask($question, ...$args): self
-    {
-        return new static(function(IO $io) use ($question, $args) {
-            $default = $args[0] ?? null;
-            if (is_bool($default)) {
-                return $io->confirm($question, $default);
-            }
-            $choices = $args[1] ?? null;
-            if (is_array($default)) {
-                return $io->choice($question, $default, ...(array)$choices);
-            }
-            if (is_array($choices)) {
-                return $io->choice($question, $choices, $default);
-            }
-            return $io->ask($question, ...$args);
-        });
-    }
 }
