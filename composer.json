@@ -1,5 +1,6 @@
 {
     "name": "php-fn/cli",
+    "abandoned": "php-fn/php-fn",
     "license": "MIT",
     "homepage": "https://github.com/php-fn/php-fn-cli",
     "require": {
