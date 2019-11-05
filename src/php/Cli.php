@@ -10,7 +10,6 @@ namespace php;
 
 use php\Cli\Parameter;
 use php\Cli\IO;
-use php\DI;
 use Invoker\ParameterResolver;
 use phpDocumentor\Reflection\DocBlock\Tags\Param;
 use phpDocumentor\Reflection\DocBlockFactory;
@@ -27,13 +26,8 @@ use Symfony\Component\Console\{
     Output\OutputInterface
 };
 
-/**
- * @property-read IO $io
- */
 class Cli extends Application
 {
-    use DI\PropertiesReadOnlyTrait;
-
     /**
      * @var DI\Container
      */
@@ -150,7 +144,6 @@ class Cli extends Application
         $this->container->set(InputInterface::class, $input = $input ?: new ArgvInput);
         $this->container->set(OutputInterface::class, $output = $output ?: new ConsoleOutput);
         $this->container->set(IO::class, $io = new IO($input, $output));
-        $this->container->set('io', $io);
 
         return parent::run($input, $output);
     }
@@ -204,7 +197,7 @@ class Cli extends Application
             if ($isOutput || !is_iterable($result)) {
                 return $result;
             }
-            traverse($this->io->render($result), function() {});
+            traverse($this->container->get(IO::class)->render($result), function() {});
             return 0;
         });
 
@@ -220,9 +213,10 @@ class Cli extends Application
     private function provided($callable): array
     {
         $params = static::params($this->invoker->reflect($callable));
+        $io = $this->container->get(IO::class);
         return merge(
-            $this->io->getOptions(true),
-            $this->io->getArguments(true),
+            $io->getOptions(true),
+            $io->getArguments(true),
             function($value, &$key) use($params) {
                 if (isset($params[$key])) {
                     $key = $params[$key]->getName();
