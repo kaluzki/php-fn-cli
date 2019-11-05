@@ -7,7 +7,7 @@
 namespace php;
 
 call_user_func(require __DIR__ . '/../vendor/autoload.php', static function () {
-    $cli = cli([
+    $cli = Cli::fromPackage([
         'cli.name' => 'tests/cli',
         'cli.version' => '0.1',
         'cli.commands.default' => false,
@@ -66,7 +66,7 @@ call_user_func(require __DIR__ . '/../vendor/autoload.php', static function () {
             'json' => $json,
         ]);
 
-        yield io('io');
+        yield new Cli\Renderable('io');
 
         /**
          * @param string $string foo
